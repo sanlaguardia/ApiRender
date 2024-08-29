@@ -141,7 +141,6 @@ exports.deleteDepartamentoById = async (req, res) => {
 
 
 //------------------------------ Empleados -------------------------------------
-const db = require('../config/db.config.js');
 const Empleado = db.Empleado;
 
 // Crear un nuevo empleado
