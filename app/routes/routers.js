@@ -16,4 +16,22 @@ router.get('/api/empleados/onebyid/:id', departamentos.getEmpleadoById);
 router.put('/api/empleados/update/:id', departamentos.updateEmpleadoById);
 router.delete('/api/empleados/delete/:id', departamentos.deleteEmpleadoById);
 
+router.post('/api/clientes/create', departamentos.createCliente);
+router.get('/api/clientes/all', departamentos.retrieveAllClientes);
+router.get('/api/clientes/onebyid/:id', departamentos.getClienteById);
+router.put('/api/clientes/update/:id', departamentos.updateClienteById);
+router.delete('/api/clientes/delete/:id', departamentos.deleteClienteById);
+
+router.post('/api/proveedores/create', departamentos.createProveedor);
+router.get('/api/proveedores/all', departamentos.retrieveAllProveedores);
+router.get('/api/proveedores/onebyid/:id', departamentos.getProveedorById);
+router.put('/api/proveedores/update/:id', departamentos.updateProveedorById);
+router.delete('/api/proveedores/delete/:id', departamentos.deleteProveedorById);
+
+router.post('/api/productos/create', departamentos.createProducto);
+router.get('/api/productos/all', departamentos.retrieveAllProductos);
+router.get('/api/productos/onebyid/:id', departamentos.getProductoById);
+router.put('/api/productos/update/:id', departamentos.updateProductoById);
+router.delete('/api/productos/delete/:id', departamentos.deleteProductoById);
+
 module.exports = router;
