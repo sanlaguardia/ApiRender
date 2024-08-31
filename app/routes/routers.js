@@ -34,4 +34,16 @@ router.get('/api/productos/onebyid/:id', departamentos.getProductoById);
 router.put('/api/productos/update/:id', departamentos.updateProductoById);
 router.delete('/api/productos/delete/:id', departamentos.deleteProductoById);
 
+router.post('/api/facturas/create', departamentos.createFactura);
+router.get('/api/facturas/all', departamentos.retrieveAllFacturas);
+router.get('/api/facturas/onebyid/:id', departamentos.getFacturaById);
+router.put('/api/facturas/update/:id', departamentos.updateFacturaById);
+router.delete('/api/facturas/delete/:id', departamentos.deleteFacturaById);
+
+router.post('/api/facturadetalles/create', departamentos.createFacturaDetalle);
+router.get('/api/facturadetalles/all', departamentos.retrieveAllFacturaDetalles);
+router.get('/api/facturadetalles/onebyid/:id', departamentos.getFacturaDetalleById);
+router.put('/api/facturadetalles/update/:id', departamentos.updateFacturaDetalleById);
+router.delete('/api/facturadetalles/delete/:id', departamentos.deleteFacturaDetalleById);
+
 module.exports = router;

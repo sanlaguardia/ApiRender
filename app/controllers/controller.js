@@ -754,3 +754,290 @@ exports.deleteProductoById = async (req, res) => {
         });
     }
 };
+
+//----------------------------------------- Factura ------------------------------------------
+const Factura = db.Factura;
+
+// Crear una nueva factura
+exports.createFactura = (req, res) => {
+    let factura = {};
+
+    try {
+        // Construir objeto Factura desde el cuerpo de la solicitud
+        factura.noFact = req.body.noFact;
+        factura.serie = req.body.serie;
+        factura.fechaFact = req.body.fechaFact;
+
+        // Guardar en la base de datos
+        Factura.create(factura).then(result => {
+            res.status(200).json({
+                message: "Factura creada exitosamente con ID = " + result.id,
+                factura: result,
+            });
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error!",
+            error: error.message
+        });
+    }
+};
+
+// Obtener todas las facturas
+exports.retrieveAllFacturas = (req, res) => {
+    Factura.findAll()
+        .then(facturas => {
+            res.status(200).json({
+                message: "¡Facturas obtenidas exitosamente!",
+                facturas: facturas
+            });
+        })
+        .catch(error => {
+            console.log(error);
+
+            res.status(500).json({
+                message: "Error!",
+                error: error
+            });
+        });
+};
+
+// Obtener una factura por ID
+exports.getFacturaById = (req, res) => {
+    let facturaId = req.params.id;
+
+    Factura.findByPk(facturaId)
+        .then(factura => {
+            if (factura) {
+                res.status(200).json({
+                    message: "Factura obtenida exitosamente con ID = " + facturaId,
+                    factura: factura
+                });
+            } else {
+                res.status(404).json({
+                    message: "Factura no encontrada con ID = " + facturaId,
+                    error: "404"
+                });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+
+            res.status(500).json({
+                message: "Error!",
+                error: error
+            });
+        });
+};
+
+// Actualizar una factura por ID
+exports.updateFacturaById = async (req, res) => {
+    try {
+        let facturaId = req.params.id;
+        let factura = await Factura.findByPk(facturaId);
+
+        if (!factura) {
+            res.status(404).json({
+                message: "Factura no encontrada para actualizar con ID = " + facturaId,
+                factura: "",
+                error: "404"
+            });
+        } else {
+            let updatedObject = {
+                noFact: req.body.noFact,
+                serie: req.body.serie,
+                fechaFact: req.body.fechaFact,
+            };
+
+            let result = await Factura.update(updatedObject, {
+                returning: true,
+                where: { id: facturaId }
+            });
+
+            if (!result) {
+                res.status(500).json({
+                    message: "Error -> No se puede actualizar la factura con ID = " + req.params.id,
+                    error: "No se puede actualizar",
+                });
+            } else {
+                res.status(200).json({
+                    message: "Factura actualizada exitosamente con ID = " + facturaId,
+                    factura: updatedObject,
+                });
+            }
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Error -> No se puede actualizar la factura con ID = " + req.params.id,
+            error: error.message
+        });
+    }
+};
+
+// Eliminar una factura por ID
+exports.deleteFacturaById = async (req, res) => {
+    try {
+        let facturaId = req.params.id;
+        let factura = await Factura.findByPk(facturaId);
+
+        if (!factura) {
+            res.status(404).json({
+                message: "No existe una factura con ID = " + facturaId,
+                error: "404",
+            });
+        } else {
+            await factura.destroy();
+            res.status(200).json({
+                message: "Factura eliminada exitosamente con ID = " + facturaId,
+                factura: factura,
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Error -> No se puede eliminar la factura con ID = " + req.params.id,
+            error: error.message,
+        });
+    }
+};
+
+//---------------------------------------- Factura Detalle -----------------------------------------
+const FacturaDetalle = db.FacturaDetalle;
+
+// Crear un nuevo detalle de factura
+exports.createFacturaDetalle = (req, res) => {
+    let facturadetalle = {};
+
+    try {
+        // Construir objeto FacturaDetalle desde el cuerpo de la solicitud
+        facturadetalle.cantidad = req.body.cantidad;
+
+        // Guardar en la base de datos
+        FacturaDetalle.create(facturadetalle).then(result => {
+            res.status(200).json({
+                message: "Detalle de factura creado exitosamente con ID = " + result.id,
+                facturadetalle: result,
+            });
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error!",
+            error: error.message
+        });
+    }
+};
+
+// Obtener todos los detalles de factura
+exports.retrieveAllFacturaDetalles = (req, res) => {
+    FacturaDetalle.findAll()
+        .then(facturadetalles => {
+            res.status(200).json({
+                message: "¡Detalles de factura obtenidos exitosamente!",
+                facturadetalles: facturadetalles
+            });
+        })
+        .catch(error => {
+            console.log(error);
+
+            res.status(500).json({
+                message: "Error!",
+                error: error
+            });
+        });
+};
+
+// Obtener un detalle de factura por ID
+exports.getFacturaDetalleById = (req, res) => {
+    let facturadetalleId = req.params.id;
+
+    FacturaDetalle.findByPk(facturadetalleId)
+        .then(facturadetalle => {
+            if (facturadetalle) {
+                res.status(200).json({
+                    message: "Detalle de factura obtenido exitosamente con ID = " + facturadetalleId,
+                    facturadetalle: facturadetalle
+                });
+            } else {
+                res.status(404).json({
+                    message: "Detalle de factura no encontrado con ID = " + facturadetalleId,
+                    error: "404"
+                });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+
+            res.status(500).json({
+                message: "Error!",
+                error: error
+            });
+        });
+};
+
+// Actualizar un detalle de factura por ID
+exports.updateFacturaDetalleById = async (req, res) => {
+    try {
+        let facturadetalleId = req.params.id;
+        let facturadetalle = await FacturaDetalle.findByPk(facturadetalleId);
+
+        if (!facturadetalle) {
+            res.status(404).json({
+                message: "Detalle de factura no encontrado para actualizar con ID = " + facturadetalleId,
+                facturadetalle: "",
+                error: "404"
+            });
+        } else {
+            let updatedObject = {
+                cantidad: req.body.cantidad,
+            };
+
+            let result = await FacturaDetalle.update(updatedObject, {
+                returning: true,
+                where: { id: facturadetalleId }
+            });
+
+            if (!result) {
+                res.status(500).json({
+                    message: "Error -> No se puede actualizar el detalle de factura con ID = " + req.params.id,
+                    error: "No se puede actualizar",
+                });
+            } else {
+                res.status(200).json({
+                    message: "Detalle de factura actualizado exitosamente con ID = " + facturadetalleId,
+                    facturadetalle: updatedObject,
+                });
+            }
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Error -> No se puede actualizar el detalle de factura con ID = " + req.params.id,
+            error: error.message
+        });
+    }
+};
+
+// Eliminar un detalle de factura por ID
+exports.deleteFacturaDetalleById = async (req, res) => {
+    try {
+        let facturadetalleId = req.params.id;
+        let facturadetalle = await FacturaDetalle.findByPk(facturadetalleId);
+
+        if (!facturadetalle) {
+            res.status(404).json({
+                message: "No existe un detalle de factura con ID = " + facturadetalleId,
+                error: "404",
+            });
+        } else {
+            await facturadetalle.destroy();
+            res.status(200).json({
+                message: "Detalle de factura eliminado exitosamente con ID = " + facturadetalleId,
+                facturadetalle: facturadetalle,
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: "Error -> No se puede eliminar el detalle de factura con ID = " + req.params.id,
+            error: error.message,
+        });
+    }
+};
+
